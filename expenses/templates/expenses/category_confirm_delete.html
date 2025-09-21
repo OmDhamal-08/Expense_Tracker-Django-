@@ -1,0 +1,44 @@
+{% extends 'expenses/base.html' %}
+
+{% block title %}Delete Category{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h2 class="mb-0">Confirm Deletion</h2>
+            </div>
+            <div class="card-body">
+                <p class="lead">Are you sure you want to delete this category?</p>
+                
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5>Category Details</h5>
+                        <p><strong>Name:</strong> {{ object.name }}</p>
+                        <p><strong>Type:</strong> 
+                            {% if object.is_default %}
+                                <span class="badge bg-secondary">Default</span>
+                            {% else %}
+                                <span class="badge bg-primary">Custom</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'category-list' %}" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash"></i> Confirm Delete
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

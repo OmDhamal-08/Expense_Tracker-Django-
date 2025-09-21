@@ -1,0 +1,25 @@
+{% extends 'expenses/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        {% if errors %}
+        <div class="alert alert-danger">
+            <strong>Fix these errors:</strong>
+            <ul>
+                {% for field, error_list in errors.items %}
+                    <li>{{ field|title }}: {{ error_list|first }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <form method="POST" novalidate>
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button type="submit" class="btn btn-primary">Register</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

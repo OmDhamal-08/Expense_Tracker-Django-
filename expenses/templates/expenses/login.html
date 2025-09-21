@@ -1,0 +1,28 @@
+{% extends 'expenses/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="mb-0">Login</h2>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="form-group mt-4">
+                        <button type="submit" class="btn btn-primary">Login</button>
+                        <a href="{% url 'password_reset' %}" class="btn btn-link">Forgot Password?</a>
+                    </div>
+                </form>
+                <hr>
+                <p class="text-center">Don't have an account? <a href="{% url 'register' %}">Register here</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

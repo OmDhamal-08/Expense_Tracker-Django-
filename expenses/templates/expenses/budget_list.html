@@ -1,0 +1,68 @@
+{% extends 'expenses/base.html' %}
+{% load humanize %}
+
+{% block title %}Budgets{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Budgets</h1>
+    <a href="{% url 'budget-create' %}" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Add Budget
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        {% if budgets %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Category</th>
+                            <th>Amount</th>
+                            <th>Period</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for budget in budgets %}
+                        <tr>
+                            <td>{{ budget.category.name }}</td>
+                            <td>${{ budget.amount|intcomma }}</td>
+                            <td>
+                                {{ budget.start_date|date:"M d, Y" }} - 
+                                {{ budget.end_date|date:"M d, Y" }}
+                            </td>
+                            <td>
+                                {% if budget.is_active %}
+                                    <span class="badge bg-success">Active</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Inactive</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{% url 'budget-update' budget.pk %}" 
+                                       class="btn btn-outline-primary">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a href="{% url 'budget-delete' budget.pk %}" 
+                                       class="btn btn-outline-danger">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                No budgets found. <a href="{% url 'budget-create' %}">Create your first budget</a>.
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
