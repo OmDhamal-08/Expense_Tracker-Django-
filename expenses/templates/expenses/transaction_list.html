@@ -1,0 +1,488 @@
+{% extends 'expenses/base.html' %}
+
+{% block title %}Transactions{% endblock %}
+
+{% block content %}
+<style>
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 3px solid transparent;
+        border-image: linear-gradient(90deg, #667eea 0%, #764ba2 100%) 1;
+    }
+    
+    .page-header h1 {
+        font-weight: 700;
+        color: #2d3748;
+        margin: 0;
+        font-size: 2.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    
+    .page-header h1::before {
+        content: "💳";
+        font-size: 2.5rem;
+    }
+    
+    .btn-add {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .btn-add:hover {
+        background: linear-gradient(135deg, #5568d3 0%, #6a3f8f 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        color: white;
+    }
+    
+    .btn-add i {
+        font-size: 1.1rem;
+    }
+    
+    .filter-card {
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+    
+    .filter-header {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        padding: 1.25rem 1.5rem;
+        border-bottom: 2px solid #dee2e6;
+    }
+    
+    .filter-header h5 {
+        margin: 0;
+        font-weight: 700;
+        color: #2d3748;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .filter-header h5::before {
+        content: "🔍";
+        font-size: 1.25rem;
+    }
+    
+    .filter-body {
+        padding: 2rem 1.5rem;
+    }
+    
+    .form-control,
+    .form-select {
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e9ecef;
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+    }
+    
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
+        background-color: #fff;
+    }
+    
+    .form-label {
+        font-weight: 600;
+        color: #2d3748;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+    }
+    
+    .btn-apply {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-apply:hover {
+        background: linear-gradient(135deg, #5568d3 0%, #6a3f8f 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(102, 126, 234, 0.3);
+        color: white;
+    }
+    
+    .btn-reset {
+        background: white;
+        color: #6c757d;
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-reset:hover {
+        background: #f8f9fa;
+        border-color: #6c757d;
+        color: #495057;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .transactions-card {
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+    }
+    
+    .transactions-table {
+        margin-bottom: 0;
+    }
+    
+    .transactions-table thead {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    }
+    
+    .transactions-table thead th {
+        border: none;
+        padding: 1.25rem 1.5rem;
+        font-weight: 700;
+        color: #2d3748;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .transactions-table tbody tr {
+        transition: all 0.2s ease;
+        border-bottom: 1px solid #f1f3f5;
+    }
+    
+    .transactions-table tbody tr:hover {
+        background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+        transform: scale(1.005);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    .transactions-table tbody tr:last-child {
+        border-bottom: none;
+    }
+    
+    .transactions-table tbody td {
+        padding: 1.25rem 1.5rem;
+        vertical-align: middle;
+        color: #495057;
+        font-weight: 500;
+    }
+    
+    .amount-income {
+        color: #10b981;
+        font-weight: 700;
+        font-size: 1.05rem;
+    }
+    
+    .amount-expense {
+        color: #ef4444;
+        font-weight: 700;
+        font-size: 1.05rem;
+    }
+    
+    .badge {
+        padding: 0.5rem 1rem;
+        font-weight: 600;
+        border-radius: 8px;
+        font-size: 0.875rem;
+    }
+    
+    .badge-income {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+    }
+    
+    .badge-expense {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+    }
+    
+    .btn-group-sm .btn {
+        border-radius: 8px;
+        padding: 0.5rem 0.875rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: 2px solid;
+    }
+    
+    .btn-outline-primary {
+        color: #667eea;
+        border-color: #667eea;
+    }
+    
+    .btn-outline-primary:hover {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-color: transparent;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+    
+    .btn-outline-danger {
+        color: #dc3545;
+        border-color: #dc3545;
+    }
+    
+    .btn-outline-danger:hover {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        border-color: transparent;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+    }
+    
+    .btn-group {
+        gap: 0.5rem;
+        display: flex;
+    }
+    
+    .pagination {
+        margin-top: 2rem;
+        margin-bottom: 0;
+    }
+    
+    .page-link {
+        border-radius: 8px;
+        margin: 0 0.25rem;
+        border: 2px solid #e9ecef;
+        color: #667eea;
+        font-weight: 600;
+        padding: 0.5rem 0.875rem;
+        transition: all 0.3s ease;
+    }
+    
+    .page-link:hover {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-color: transparent;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+    
+    .page-item.active .page-link {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-color: transparent;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+    }
+    
+    .empty-state-icon {
+        font-size: 5rem;
+        margin-bottom: 1.5rem;
+        opacity: 0.3;
+    }
+    
+    .empty-state-content {
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        border: none;
+        border-radius: 16px;
+        padding: 2.5rem;
+        box-shadow: 0 4px 16px rgba(33, 150, 243, 0.1);
+    }
+    
+    .empty-state-content p {
+        margin: 0;
+        color: #0d47a1;
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+    
+    .empty-state-content a {
+        color: #667eea;
+        font-weight: 700;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+    
+    .empty-state-content a:hover {
+        color: #764ba2;
+        text-decoration: underline;
+    }
+    
+    @media (max-width: 768px) {
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        
+        .btn-add {
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .transactions-table {
+            font-size: 0.875rem;
+        }
+        
+        .transactions-table thead th,
+        .transactions-table tbody td {
+            padding: 1rem;
+        }
+    }
+</style>
+
+<div class="page-header">
+    <h1>Transactions</h1>
+    <a href="{% url 'transaction-create' %}" class="btn btn-add">
+        <i class="bi bi-plus-circle"></i> Add Transaction
+    </a>
+</div>
+
+<div class="card filter-card">
+    <div class="card-header filter-header">
+        <h5>Filters</h5>
+    </div>
+    <div class="card-body filter-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-3">
+                {{ filter_form.start_date.label_tag }}
+                {{ filter_form.start_date }}
+            </div>
+            <div class="col-md-3">
+                {{ filter_form.end_date.label_tag }}
+                {{ filter_form.end_date }}
+            </div>
+            <div class="col-md-3">
+                {{ filter_form.category.label_tag }}
+                {{ filter_form.category }}
+            </div>
+            <div class="col-md-3">
+                {{ filter_form.transaction_type.label_tag }}
+                {{ filter_form.transaction_type }}
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-apply">Apply Filters</button>
+                <a href="{% url 'transaction-list' %}" class="btn btn-reset">Reset</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card transactions-card">
+    <div class="card-body p-0">
+        {% if transactions %}
+            <div class="table-responsive">
+                <table class="table transactions-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Category</th>
+                            <th>Amount</th>
+                            <th>Type</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for transaction in transactions %}
+                            <tr>
+                                <td>{{ transaction.date|date:"M d, Y" }}</td>
+                                <td><strong>{{ transaction.description|truncatechars:30 }}</strong></td>
+                                <td>
+                                    {% if transaction.category %}
+                                        <span class="badge bg-secondary">{{ transaction.category }}</span>
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td class="{% if transaction.transaction_type == 'IN' %}amount-income{% else %}amount-expense{% endif %}">
+                                    ${{ transaction.amount|floatformat:2 }}
+                                </td>
+                                <td>
+                                    {% if transaction.transaction_type == 'IN' %}
+                                        <span class="badge badge-income">Income</span>
+                                    {% else %}
+                                        <span class="badge badge-expense">Expense</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{% url 'transaction-update' transaction.pk %}" 
+                                           class="btn btn-outline-primary"
+                                           title="Edit Transaction">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="{% url 'transaction-delete' transaction.pk %}" 
+                                           class="btn btn-outline-danger"
+                                           title="Delete Transaction">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            {% if is_paginated %}
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&laquo; First</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Previous</a>
+                            </li>
+                        {% endif %}
+                        
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                                <li class="page-item active">
+                                    <a class="page-link" href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ num }}</a>
+                                </li>
+                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ num }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Next</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Last &raquo;</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-state-icon">💳</div>
+                <div class="empty-state-content">
+                    <p>No transactions found. <a href="{% url 'transaction-create' %}">Add your first transaction</a> to get started!</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

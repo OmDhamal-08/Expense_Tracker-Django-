@@ -1,0 +1,307 @@
+{% extends 'expenses/base.html' %}
+{% load humanize %}
+{% comment %} Chnaged {% endcomment %}
+
+{% block title %}Budgets{% endblock %}
+
+{% block content %}
+<style>
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 3px solid transparent;
+        border-image: linear-gradient(90deg, #667eea 0%, #764ba2 100%) 1;
+    }
+    
+    .page-header h1 {
+        font-weight: 700;
+        color: #2d3748;
+        margin: 0;
+        font-size: 2.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    
+    .page-header h1::before {
+        content: "💰";
+        font-size: 2.5rem;
+    }
+    
+    .btn-add {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .btn-add:hover {
+        background: linear-gradient(135deg, #5568d3 0%, #6a3f8f 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        color: white;
+    }
+    
+    .btn-add i {
+        font-size: 1.1rem;
+    }
+    
+    .budgets-card {
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+    }
+    
+    .budgets-table {
+        margin-bottom: 0;
+    }
+    
+    .budgets-table thead {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    }
+    
+    .budgets-table thead th {
+        border: none;
+        padding: 1.25rem 1.5rem;
+        font-weight: 700;
+        color: #2d3748;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .budgets-table tbody tr {
+        transition: all 0.2s ease;
+        border-bottom: 1px solid #f1f3f5;
+    }
+    
+    .budgets-table tbody tr:hover {
+        background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+        transform: scale(1.005);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    .budgets-table tbody tr:last-child {
+        border-bottom: none;
+    }
+    
+    .budgets-table tbody td {
+        padding: 1.25rem 1.5rem;
+        vertical-align: middle;
+        color: #495057;
+        font-weight: 500;
+    }
+    
+    .budgets-table tbody td:first-child {
+        font-weight: 600;
+        color: #2d3748;
+    }
+    
+    .badge {
+        padding: 0.5rem 1rem;
+        font-weight: 600;
+        border-radius: 8px;
+        font-size: 0.875rem;
+    }
+    
+    .badge.bg-success {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+    }
+    
+    .badge.bg-secondary {
+        background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%) !important;
+    }
+    
+    .btn-group-sm .btn {
+        border-radius: 8px;
+        padding: 0.5rem 0.875rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: 2px solid;
+    }
+    
+    .btn-outline-primary {
+        color: #667eea;
+        border-color: #667eea;
+    }
+    
+    .btn-outline-primary:hover {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-color: transparent;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+    
+    .btn-outline-danger {
+        color: #dc3545;
+        border-color: #dc3545;
+    }
+    
+    .btn-outline-danger:hover {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        border-color: transparent;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+    }
+    
+    .btn-group {
+        gap: 0.5rem;
+        display: flex;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+    }
+    
+    .empty-state-icon {
+        font-size: 5rem;
+        margin-bottom: 1.5rem;
+        opacity: 0.3;
+    }
+    
+    .empty-state-content {
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        border: none;
+        border-radius: 16px;
+        padding: 2.5rem;
+        box-shadow: 0 4px 16px rgba(33, 150, 243, 0.1);
+    }
+    
+    .empty-state-content p {
+        margin: 0;
+        color: #0d47a1;
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+    
+    .empty-state-content a {
+        color: #667eea;
+        font-weight: 700;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+    
+    .empty-state-content a:hover {
+        color: #764ba2;
+        text-decoration: underline;
+    }
+    
+    .amount-cell {
+        font-weight: 700;
+        color: #10b981;
+        font-size: 1.05rem;
+    }
+    
+    .period-cell {
+        color: #6c757d;
+        font-size: 0.95rem;
+    }
+    
+    @media (max-width: 768px) {
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        
+        .btn-add {
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .budgets-table {
+            font-size: 0.875rem;
+        }
+        
+        .budgets-table thead th,
+        .budgets-table tbody td {
+            padding: 1rem;
+        }
+    }
+</style>
+
+<div class="page-header">
+    <h1>Budgets</h1>
+    <a href="{% url 'budget-create' %}" class="btn btn-add">
+        <i class="bi bi-plus-circle"></i> Add Budget
+    </a>
+</div>
+
+<div class="card budgets-card">
+    <div class="card-body p-0">
+        {% if budgets %}
+            <div class="table-responsive">
+                <table class="table budgets-table">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Amount</th>
+                            <th>Period</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for budget in budgets %}
+                        <tr>
+                            <td>
+                                <span style="display: inline-flex; align-items: center; gap: 0.5rem;">
+                                    <span style="display: inline-block; width: 8px; height: 8px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%;"></span>
+                                    {{ budget.category.name }}
+                                </span>
+                            </td>
+                            <td class="amount-cell">${{ budget.amount|intcomma }}</td>
+                            <td class="period-cell">
+                                {{ budget.start_date|date:"M d, Y" }} - 
+                                {{ budget.end_date|date:"M d, Y" }}
+                            </td>
+                            <td>
+                                {% if budget.is_active %}
+                                    <span class="badge bg-success">✓ Active</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Inactive</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{% url 'budget-update' budget.pk %}" 
+                                       class="btn btn-outline-primary"
+                                       title="Edit Budget">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a href="{% url 'budget-delete' budget.pk %}" 
+                                       class="btn btn-outline-danger"
+                                       title="Delete Budget">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-state-icon">📊</div>
+                <div class="empty-state-content">
+                    <p>No budgets found. <a href="{% url 'budget-create' %}">Create your first budget</a> to start tracking your spending!</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+{% comment %} Chnaged {% endcomment %}
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Expense Tracker - {% block title %}{% endblock %}</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    {% block extra_css %}{% endblock %}
+    <style>
+      :root {
+        --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(to bottom right, #f8f9fa 0%, #e9ecef 100%);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .navbar {
+        background: var(--primary-gradient) !important;
+        box-shadow: 0 4px 16px rgba(102, 126, 234, 0.2);
+        padding: 1rem 0;
+      }
+
+      .navbar-brand {
+        font-weight: 700;
+        font-size: 1.5rem;
+        letter-spacing: -0.5px;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .navbar-brand::before {
+        content: "💰";
+        font-size: 1.75rem;
+      }
+
+      .nav-link {
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+        padding: 0.5rem 1rem !important;
+        margin: 0 0.25rem;
+      }
+
+      .nav-link:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateY(-2px);
+      }
+
+      .dropdown-menu {
+        border: none;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        border-radius: 12px;
+        padding: 0.5rem;
+        margin-top: 0.5rem;
+      }
+
+      .dropdown-item {
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        transition: all 0.2s ease;
+        font-weight: 500;
+      }
+
+      .dropdown-item:hover {
+        background: var(--primary-gradient);
+        color: white;
+        transform: translateX(5px);
+      }
+
+      .navbar-toggler {
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 8px;
+      }
+
+      .container {
+        flex: 1;
+      }
+
+      .alert {
+        border: none;
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        animation: slideDown 0.3s ease;
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .alert-success {
+        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        color: #155724;
+        border-left: 4px solid #28a745;
+      }
+
+      .alert-danger {
+        background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+        color: #721c24;
+        border-left: 4px solid #dc3545;
+      }
+
+      .alert-warning {
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        color: #856404;
+        border-left: 4px solid #ffc107;
+      }
+
+      .alert-info {
+        background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+        color: #0c5460;
+        border-left: 4px solid #17a2b8;
+      }
+
+      .btn-close:hover {
+        transform: rotate(90deg);
+      }
+
+      footer {
+        background: white !important;
+        border-top: 2px solid #e9ecef;
+        box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.05);
+        margin-top: auto;
+      }
+
+      footer .text-muted {
+        font-weight: 500;
+        color: #6c757d !important;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 5px;
+      }
+
+      .container.mt-4 {
+        animation: fadeIn 0.4s ease;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      #navbarDropdown {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem !important;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      #navbarDropdown:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      #navbarDropdown i {
+        font-size: 1.25rem;
+      }
+
+      @media (max-width: 991px) {
+        .navbar-nav {
+          padding: 1rem 0;
+        }
+
+        .nav-link {
+          margin: 0.25rem 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <div class="container">
+        <a class="navbar-brand" href="{% url 'home' %}">Expense Tracker</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto">
+            {% if user.is_authenticated %} {% comment %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'home' %}">
+                <i class="bi bi-speedometer2"></i> Home
+              </a>
+            </li>
+            {% endcomment %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'dashboard' %}">
+                <i class="bi bi-speedometer2"></i> Dashboard
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'category-list' %}">
+                <i class="bi bi-tag"></i> Categories
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'budget-list' %}">
+                <i class="bi bi-wallet2"></i> Budgets
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'reports' %}">
+                <i class="bi bi-graph-up"></i> Reports
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'transaction-list' %}">
+                <i class="bi bi-list-ul"></i> History
+              </a>
+            </li>
+            {% endif %}
+          </ul>
+          <ul class="navbar-nav">
+            {% if user.is_authenticated %}
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+              >
+                <i class="bi bi-person-circle"></i> {{ user.username }}
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                  <a class="dropdown-item" href="{% url 'password_change' %}">
+                    <i class="bi bi-key"></i> Change Password
+                  </a>
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <a class="dropdown-item" href="{% url 'logout' %}">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="{% url 'about' %}">
+                    <i class="bi bi-box-arrow-right"></i> About
+                  </a>
+                </li>
+              </ul>
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'login' %}">
+                <i class="bi bi-box-arrow-in-right"></i> Login
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'register' %}">
+                <i class="bi bi-person-plus"></i> Register
+              </a>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-4">
+      {% if messages %} {% for message in messages %}
+      <div
+        class="alert alert-{{ message.tags }} alert-dismissible fade show"
+        role="alert"
+      >
+        <strong>
+          {% if message.tags == 'success' %}
+          <i class="bi bi-check-circle-fill"></i>
+          {% elif message.tags == 'danger' %}
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          {% elif message.tags == 'warning' %}
+          <i class="bi bi-exclamation-circle-fill"></i>
+          {% elif message.tags == 'info' %}
+          <i class="bi bi-info-circle-fill"></i>
+          {% endif %}
+        </strong>
+        {{ message }}
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
+      </div>
+      {% endfor %} {% endif %} {% block content %}{% endblock %}
+    </div>
+
+    <footer class="mt-5 py-4 bg-light">
+      <div class="container text-center">
+        <span class="text-muted">Expense Tracker &copy; {% now "Y" %}</span>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>

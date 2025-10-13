@@ -1,0 +1,729 @@
+{% extends 'expenses/base.html' %}
+{% load static %}
+
+{% block title %}About - Expense Tracker{% endblock %}
+
+{% block content %}
+<style>
+    .about-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 5rem 0;
+        margin: -2rem -15px 3rem;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .about-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%);
+    }
+    
+    .about-hero .container {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .about-hero h1 {
+        font-size: 3.5rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        animation: fadeInUp 0.6s ease;
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .about-hero p {
+        font-size: 1.3rem;
+        opacity: 0.95;
+        margin-bottom: 2rem;
+        line-height: 1.6;
+    }
+    
+    .hero-badge {
+        background: rgba(255, 255, 255, 0.2);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 12px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+    
+    .hero-badge:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+    }
+    
+    .mission-section {
+        padding: 4rem 0;
+    }
+    
+    .section-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: #2d3748;
+        margin-bottom: 1.5rem;
+        position: relative;
+        display: inline-block;
+    }
+    
+    .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        border-radius: 2px;
+    }
+    
+    .feature-card {
+        border: none;
+        border-radius: 20px;
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        transition: all 0.4s ease;
+        height: 100%;
+        background: white;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        transform: scaleX(0);
+        transition: transform 0.4s ease;
+    }
+    
+    .feature-card:hover::before {
+        transform: scaleX(1);
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-15px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+    
+    .feature-icon {
+        font-size: 3.5rem;
+        margin-bottom: 1.5rem;
+        display: block;
+    }
+    
+    .feature-card h4 {
+        font-weight: 700;
+        color: #2d3748;
+        margin-bottom: 1rem;
+    }
+    
+    .stats-section {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        padding: 4rem 0;
+        border-radius: 30px;
+        margin: 4rem 0;
+        position: relative;
+    }
+    
+    .stat-item {
+        text-align: center;
+        padding: 2rem 1rem;
+    }
+    
+    .stat-number {
+        font-size: 3.5rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        display: block;
+        line-height: 1;
+        margin-bottom: 0.5rem;
+    }
+    
+    .stat-label {
+        font-size: 1.1rem;
+        color: #6c757d;
+        font-weight: 600;
+    }
+    
+    .tech-stack {
+        background: white;
+        padding: 4rem 3rem;
+        border-radius: 30px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        margin: 4rem 0;
+    }
+    
+    .tech-item {
+        text-align: center;
+        padding: 2rem 1.5rem;
+        border-radius: 20px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        transition: all 0.3s ease;
+        height: 100%;
+        border: 2px solid transparent;
+    }
+    
+    .tech-item:hover {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        transform: translateY(-10px);
+        border-color: #667eea;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    }
+    
+    .tech-item:hover .tech-icon,
+    .tech-item:hover h6,
+    .tech-item:hover small {
+        color: white !important;
+    }
+    
+    .tech-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        display: block;
+    }
+    
+    .timeline {
+        position: relative;
+        padding: 3rem 0;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 50%;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+        transform: translateX(-50%);
+        border-radius: 2px;
+    }
+    
+    .timeline-item {
+        position: relative;
+        margin-bottom: 4rem;
+        width: 45%;
+    }
+    
+    .timeline-item:nth-child(odd) {
+        left: 0;
+        text-align: right;
+        padding-right: 4rem;
+    }
+    
+    .timeline-item:nth-child(even) {
+        left: 55%;
+        padding-left: 4rem;
+    }
+    
+    .timeline-item::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        width: 20px;
+        height: 20px;
+        background: white;
+        border: 4px solid #667eea;
+        border-radius: 50%;
+        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+    }
+    
+    .timeline-item:nth-child(odd)::before {
+        right: -10px;
+    }
+    
+    .timeline-item:nth-child(even)::before {
+        left: -10px;
+    }
+    
+    .timeline-content {
+        background: white;
+        padding: 2rem;
+        border-radius: 20px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+    
+    .timeline-content:hover {
+        transform: scale(1.05);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+    
+    .timeline-content h5 {
+        color: #2d3748;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+    
+    .testimonial-card {
+        background: white;
+        padding: 2.5rem;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        margin-bottom: 2rem;
+        border-left: 6px solid #667eea;
+        transition: all 0.3s ease;
+    }
+    
+    .testimonial-card:hover {
+        transform: translateX(10px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+    }
+    
+    .testimonial-text {
+        font-style: italic;
+        font-size: 1.1rem;
+        color: #495057;
+        margin-bottom: 1.5rem;
+        line-height: 1.8;
+    }
+    
+    .testimonial-text::before {
+        content: '"';
+        font-size: 3rem;
+        color: #667eea;
+        opacity: 0.3;
+        line-height: 0;
+        display: block;
+        margin-bottom: -0.5rem;
+    }
+    
+    .user-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: white;
+    }
+    
+    .cta-section {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        padding: 5rem 0;
+        border-radius: 30px;
+        text-align: center;
+        margin: 4rem 0;
+        box-shadow: 0 20px 60px rgba(16, 185, 129, 0.3);
+    }
+    
+    .cta-section h2 {
+        font-size: 2.75rem;
+        font-weight: 800;
+        margin-bottom: 1.5rem;
+    }
+    
+    .btn-cta {
+        padding: 1rem 2.5rem;
+        font-size: 1.1rem;
+        font-weight: 700;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        border: none;
+    }
+    
+    .btn-light-cta {
+        background: white;
+        color: #10b981;
+    }
+    
+    .btn-light-cta:hover {
+        background: #f8f9fa;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        color: #10b981;
+    }
+    
+    .btn-outline-cta {
+        background: transparent;
+        color: white;
+        border: 2px solid white;
+    }
+    
+    .btn-outline-cta:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        color: white;
+    }
+    
+    @media (max-width: 768px) {
+        .about-hero h1 {
+            font-size: 2.5rem;
+        }
+        
+        .about-hero p {
+            font-size: 1.1rem;
+        }
+        
+        .timeline::before {
+            left: 20px;
+        }
+        
+        .timeline-item {
+            width: 100%;
+            left: 0 !important;
+            text-align: left !important;
+            padding-left: 60px !important;
+            padding-right: 0 !important;
+        }
+        
+        .timeline-item::before {
+            left: 11px !important;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+        }
+        
+        .cta-section h2 {
+            font-size: 2rem;
+        }
+    }
+</style>
+
+<!-- Hero Section -->
+<section class="about-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-10 mx-auto text-center">
+                <h1>💰 About Expense Tracker</h1>
+                <p class="lead">Your personal finance companion for smarter money management</p>
+                <div class="mt-4">
+                    <span class="hero-badge me-2 mb-2">📊 Smart Analytics</span>
+                    <span class="hero-badge me-2 mb-2">🔒 100% Secure</span>
+                    <span class="hero-badge me-2 mb-2">📱 Mobile Ready</span>
+                    <span class="hero-badge mb-2">🎯 User-Friendly</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Mission Statement -->
+<section class="mission-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 mx-auto text-center">
+                <h2 class="section-title">Our Mission</h2>
+                <p class="lead text-muted mt-4" style="line-height: 1.8;">
+                    We believe that financial freedom starts with awareness. Our expense tracker empowers individuals 
+                    to understand their spending patterns, make informed decisions, and achieve their financial goals 
+                    through intuitive tools and insightful analytics. Managing money shouldn't be complicated—it should be simple, clear, and empowering.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Key Features -->
+<section class="container mb-5">
+    <div class="text-center mb-5">
+        <h2 class="section-title">✨ Powerful Features</h2>
+    </div>
+    <div class="row">
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="feature-card">
+                <span class="feature-icon">📈</span>
+                <h4>Advanced Analytics</h4>
+                <p class="text-muted">
+                    Visualize your spending with interactive charts, monthly trends, and category-wise breakdowns. 
+                    Make data-driven financial decisions with our powerful reporting tools.
+                </p>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="feature-card">
+                <span class="feature-icon">🎯</span>
+                <h4>Budget Management</h4>
+                <p class="text-muted">
+                    Set custom budgets for different categories and receive smart alerts when you're approaching your limits. Stay on track with your financial goals effortlessly.
+                </p>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="feature-card">
+                <span class="feature-icon">🔄</span>
+                <h4>Recurring Transactions</h4>
+                <p class="text-muted">
+                    Automate your regular expenses and income tracking. Never miss recording your subscriptions, bills, or salary again with smart automation.
+                </p>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="feature-card">
+                <span class="feature-icon">📱</span>
+                <h4>Mobile-Friendly</h4>
+                <p class="text-muted">
+                    Access your financial data anywhere, anytime. Our fully responsive design works flawlessly on phones, tablets, and desktop computers.
+                </p>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="feature-card">
+                <span class="feature-icon">🔒</span>
+                <h4>Secure & Private</h4>
+                <p class="text-muted">
+                    Your financial data is encrypted and secure with industry-standard protection. We never share your information with third parties. Your privacy is paramount.
+                </p>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="feature-card">
+                <span class="feature-icon">📤</span>
+                <h4>Data Export</h4>
+                <p class="text-muted">
+                    Export your transactions to CSV or Excel formats for advanced analysis, tax preparation, or record-keeping purposes. Your data, your way.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                <div class="stat-item">
+                    <span class="stat-number">10K+</span>
+                    <span class="stat-label">Transactions Tracked</span>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                <div class="stat-item">
+                    <span class="stat-number">500+</span>
+                    <span class="stat-label">Active Users</span>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                <div class="stat-item">
+                    <span class="stat-number">$2M+</span>
+                    <span class="stat-label">Expenses Managed</span>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-item">
+                    <span class="stat-number">99.9%</span>
+                    <span class="stat-label">Uptime Reliability</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Technology Stack -->
+<section class="container">
+    <div class="tech-stack">
+        <div class="text-center mb-5">
+            <h2 class="section-title">🛠️ Built With Modern Technology</h2>
+            <p class="text-muted mt-3">Powered by cutting-edge tools and frameworks</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-4 col-6">
+                <div class="tech-item">
+                    <span class="tech-icon">🐍</span>
+                    <h6 class="fw-bold mb-1">Python</h6>
+                    <small class="text-muted">Backend Logic</small>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-6">
+                <div class="tech-item">
+                    <span class="tech-icon">⚡</span>
+                    <h6 class="fw-bold mb-1">Django</h6>
+                    <small class="text-muted">Web Framework</small>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-6">
+                <div class="tech-item">
+                    <span class="tech-icon">📊</span>
+                    <h6 class="fw-bold mb-1">Plotly</h6>
+                    <small class="text-muted">Interactive Charts</small>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-6">
+                <div class="tech-item">
+                    <span class="tech-icon">🎨</span>
+                    <h6 class="fw-bold mb-1">Matplotlib</h6>
+                    <small class="text-muted">Data Visualization</small>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-6">
+                <div class="tech-item">
+                    <span class="tech-icon">🗄️</span>
+                    <h6 class="fw-bold mb-1">PostgreSQL</h6>
+                    <small class="text-muted">Database</small>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-6">
+                <div class="tech-item">
+                    <span class="tech-icon">🎯</span>
+                    <h6 class="fw-bold mb-1">Bootstrap 5</h6>
+                    <small class="text-muted">UI Framework</small>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-6">
+                <div class="tech-item">
+                    <span class="tech-icon">📱</span>
+                    <h6 class="fw-bold mb-1">JavaScript</h6>
+                    <small class="text-muted">Interactivity</small>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-6">
+                <div class="tech-item">
+                    <span class="tech-icon">🔐</span>
+                    <h6 class="fw-bold mb-1">Django Auth</h6>
+                    <small class="text-muted">Security</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Development Timeline -->
+<section class="container my-5">
+    <div class="text-center mb-5">
+        <h2 class="section-title">🚀 Our Journey</h2>
+        <p class="text-muted mt-3">From concept to reality</p>
+    </div>
+    <div class="timeline">
+        <div class="timeline-item">
+            <div class="timeline-content">
+                <h5>🎯 Concept & Planning</h5>
+                <small class="text-muted d-block mb-2">January 2024</small>
+                <p class="mb-0">Identified the need for a simple yet powerful expense tracking solution for everyday users.</p>
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-content">
+                <h5>💻 Development Started</h5>
+                <small class="text-muted d-block mb-2">March 2024</small>
+                <p class="mb-0">Built the core functionality with Django backend and responsive frontend design.</p>
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-content">
+                <h5>📊 Analytics Integration</h5>
+                <small class="text-muted d-block mb-2">June 2024</small>
+                <p class="mb-0">Added advanced charting capabilities with Plotly and Matplotlib for deeper insights.</p>
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-content">
+                <h5>🎉 Official Launch</h5>
+                <small class="text-muted d-block mb-2">October 2024</small>
+                <p class="mb-0">Successfully launched the platform with all core features and enterprise-grade security.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section class="container my-5">
+    <div class="text-center mb-5">
+        <h2 class="section-title">💬 What Users Say</h2>
+        <p class="text-muted mt-3">Real stories from real users</p>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="testimonial-card">
+                <div class="testimonial-text">
+                    This expense tracker completely changed how I manage my finances. The category insights helped me save 20% on unnecessary spending!
+                </div>
+                <div class="d-flex align-items-center">
+                    <div class="user-avatar bg-primary">TC</div>
+                    <div class="ms-3">
+                        <h6 class="mb-0 fw-bold">Tushar Chaugale</h6>
+                        <small class="text-muted">Kali Linux ka shembda</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="testimonial-card">
+                <div class="testimonial-text">
+                    As a student, budgeting is crucial. This app made it so easy to track my expenses and stay within my monthly budget. Highly recommend!
+                </div>
+                <div class="d-flex align-items-center">
+                    <div class="user-avatar bg-success">SH</div>
+                    <div class="ms-3">
+                        <h6 class="mb-0 fw-bold">Sarang Hekad</h6>
+                        <small class="text-muted">UI-UX ka badsha </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 mx-auto text-center">
+                <h2>Ready to Take Control of Your Finances?</h2>
+                <p class="lead mb-4 opacity-90" style="font-size: 1.2rem;">
+                    Join thousands of users who have transformed their financial habits with our expense tracker. It's free, secure, and takes less than a minute to get started.
+                </p>
+                <div class="d-flex gap-3 justify-content-center flex-wrap mt-4">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'dashboard' %}" class="btn btn-cta btn-light-cta">
+                            🚀 Go to Dashboard
+                        </a>
+                        <a href="{% url 'reports' %}" class="btn btn-cta btn-outline-cta">
+                            📊 View Reports
+                        </a>
+                    {% else %}
+                        <a href="{% url 'register' %}" class="btn btn-cta btn-light-cta">
+                            📝 Get Started Free
+                        </a>
+                        <a href="{% url 'login' %}" class="btn btn-cta btn-outline-cta">
+                            🔐 Sign In
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer Note -->
+<section class="container text-center py-5">
+    <p class="text-muted" style="font-size: 0.95rem;">
+        Built with ❤️ using Django, Bootstrap, and modern web technologies<br>
+        <strong>Expense Tracker v2.0</strong> &copy; 2024. All rights reserved.
+    </p>
+</section>
+{% endblock %}

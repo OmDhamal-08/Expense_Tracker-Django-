@@ -1,0 +1,17 @@
+asgiref==3.8.1
+crispy-bootstrap5==2024.2
+django==5.2.3
+django-crispy-forms==2.3
+django-filter==25.1
+django-tables2==2.7.5
+django-widget-tweaks==1.5.0
+python-dotenv==1.0.1
+sqlparse==0.5.3
+tzdata==2025.2
+pytz==2025.2
+numpy==2.3.1
+pandas==2.3.0
+plotly==6.2.0
+packaging==25.0
+six==1.17.0
+dateutil==2.9.0

@@ -1,0 +1,346 @@
+{% extends 'expenses/base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 20px;
+        padding: 4rem 2rem;
+        text-align: center;
+        color: white;
+        margin-bottom: 3rem;
+        box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+        animation: fadeIn 0.6s ease;
+    }
+    
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .hero-icon {
+        font-size: 5rem;
+        margin-bottom: 1.5rem;
+        animation: bounce 2s infinite;
+    }
+    
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+    
+    .hero-title {
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        letter-spacing: -1px;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.25rem;
+        opacity: 0.95;
+        margin-bottom: 2rem;
+        line-height: 1.6;
+    }
+    
+    .cta-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .btn-cta {
+        padding: 1rem 2.5rem;
+        font-size: 1.1rem;
+        font-weight: 700;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .btn-primary-cta {
+        background: white;
+        color: #667eea;
+    }
+    
+    .btn-primary-cta:hover {
+        background: #f8f9fa;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        color: #667eea;
+    }
+    
+    .btn-secondary-cta {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: 2px solid white;
+    }
+    
+    .btn-secondary-cta:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        color: white;
+    }
+    
+    .features-section {
+        margin-bottom: 3rem;
+    }
+    
+    .section-title {
+        text-align: center;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #2d3748;
+        margin-bottom: 3rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+    }
+    
+    .feature-card {
+        border: none;
+        border-radius: 16px;
+        padding: 2rem;
+        height: 100%;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        background: white;
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    }
+    
+    .feature-icon {
+        font-size: 3.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .feature-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #2d3748;
+        margin-bottom: 1rem;
+    }
+    
+    .feature-description {
+        color: #6c757d;
+        line-height: 1.7;
+        font-size: 1rem;
+    }
+    
+    .stats-section {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 20px;
+        padding: 3rem 2rem;
+        margin-bottom: 3rem;
+        text-align: center;
+    }
+    
+    .stats-container {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        gap: 2rem;
+    }
+    
+    .stat-item {
+        flex: 1;
+        min-width: 150px;
+    }
+    
+    .stat-number {
+        font-size: 3rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .stat-label {
+        font-size: 1rem;
+        color: #6c757d;
+        font-weight: 600;
+        margin-top: 0.5rem;
+    }
+    
+    .cta-section {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        border-radius: 20px;
+        padding: 3rem 2rem;
+        text-align: center;
+        color: white;
+        box-shadow: 0 10px 40px rgba(16, 185, 129, 0.3);
+    }
+    
+    .cta-section h2 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+    
+    .cta-section p {
+        font-size: 1.2rem;
+        opacity: 0.95;
+        margin-bottom: 2rem;
+    }
+    
+    .btn-cta-action {
+        background: white;
+        color: #10b981;
+        padding: 1rem 3rem;
+        font-size: 1.2rem;
+        font-weight: 700;
+        border-radius: 12px;
+        border: none;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+    
+    .btn-cta-action:hover {
+        background: #f8f9fa;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        color: #10b981;
+    }
+    
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 2rem;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.1rem;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+        }
+        
+        .cta-buttons {
+            flex-direction: column;
+        }
+        
+        .btn-cta {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="hero-icon">💰</div>
+    <h1 class="hero-title">Track Your Expenses Smartly</h1>
+    <p class="hero-subtitle">Take control of your finances with our simple, powerful expense tracking tool. Monitor spending, set budgets, and achieve your financial goals.</p>
+    <div class="cta-buttons">
+        {% if user.is_authenticated %}
+            <a href="{% url 'dashboard' %}" class="btn btn-cta btn-primary-cta">
+                <i class="bi bi-speedometer2"></i> Go to Dashboard
+            </a>
+        {% else %}
+            <a href="{% url 'register' %}" class="btn btn-cta btn-primary-cta">
+                <i class="bi bi-person-plus"></i> Get Started Free
+            </a>
+            <a href="{% url 'login' %}" class="btn btn-cta btn-secondary-cta">
+                <i class="bi bi-box-arrow-in-right"></i> Login
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Stats Section -->
+<div class="stats-section">
+    <div class="stats-container">
+        <div class="stat-item">
+            <div class="stat-number">100%</div>
+            <div class="stat-label">Free Forever</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">∞</div>
+            <div class="stat-label">Unlimited Transactions</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">24/7</div>
+            <div class="stat-label">Access Anytime</div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="features-section">
+    <h2 class="section-title">✨ Powerful Features</h2>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card feature-card">
+                <div class="feature-icon">📊</div>
+                <h3 class="feature-title">Visual Reports</h3>
+                <p class="feature-description">Get insights with beautiful charts and graphs. See your spending patterns at a glance with interactive visualizations.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3 class="feature-title">Budget Management</h3>
+                <p class="feature-description">Set budgets for different categories and get alerts when you're approaching your limits. Stay on track with your financial goals.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card feature-card">
+                <div class="feature-icon">🏷️</div>
+                <h3 class="feature-title">Smart Categories</h3>
+                <p class="feature-description">Organize expenses with custom categories. Track where your money goes and make informed financial decisions.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card feature-card">
+                <div class="feature-icon">📱</div>
+                <h3 class="feature-title">Mobile Friendly</h3>
+                <p class="feature-description">Access your finances on any device. Our responsive design works perfectly on phones, tablets, and computers.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3 class="feature-title">Secure & Private</h3>
+                <p class="feature-description">Your financial data is encrypted and secure. We prioritize your privacy and never share your information.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card feature-card">
+                <div class="feature-icon">💾</div>
+                <h3 class="feature-title">Export Data</h3>
+                <p class="feature-description">Download your transaction history anytime. Keep backups and analyze your data in your favorite tools.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CTA Section -->
+{% if not user.is_authenticated %}
+<div class="cta-section">
+    <h2>Ready to Take Control?</h2>
+    <p>Join thousands of users who are already managing their finances better. It's free and takes less than a minute!</p>
+    <a href="{% url 'register' %}" class="btn-cta-action">
+        Start Tracking Now →
+    </a>
+</div>
+{% endif %}
+{% endblock %}

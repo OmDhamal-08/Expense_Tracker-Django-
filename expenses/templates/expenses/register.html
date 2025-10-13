@@ -1,0 +1,289 @@
+{% extends 'expenses/base.html' %}
+{% load crispy_forms_tags %}
+{% comment %} Chnaged {% endcomment %}
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<style>
+    .register-container {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 0;
+    }
+    
+    .register-card {
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        animation: fadeInScale 0.4s ease;
+    }
+    
+    @keyframes fadeInScale {
+        from {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+    
+    .register-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2.5rem 2rem;
+        text-align: center;
+        border: none;
+    }
+    
+    .register-icon {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .register-header h2 {
+        margin: 0;
+        font-weight: 700;
+        font-size: 2rem;
+    }
+    
+    .register-header p {
+        margin: 0.5rem 0 0 0;
+        opacity: 0.9;
+        font-size: 0.95rem;
+    }
+    
+    .register-body {
+        padding: 2.5rem 2rem;
+        background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
+    }
+    
+    .form-control,
+    .form-select {
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e9ecef;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+    }
+    
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
+        background-color: #fff;
+    }
+    
+    .form-label {
+        font-weight: 600;
+        color: #2d3748;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+    }
+    
+    .mb-3 {
+        margin-bottom: 1.5rem !important;
+    }
+    
+    .helptext {
+        font-size: 0.875rem;
+        color: #6c757d;
+        margin-top: 0.5rem;
+        display: block;
+        line-height: 1.6;
+    }
+    
+    .error-alert {
+        background: linear-gradient(135deg, #fee 0%, #fdd 100%);
+        border: none;
+        border-left: 4px solid #dc3545;
+        border-radius: 12px;
+        padding: 1.25rem 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 12px rgba(220, 53, 69, 0.15);
+    }
+    
+    .error-alert strong {
+        color: #721c24;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1.05rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .error-alert strong::before {
+        content: "⚠️";
+        font-size: 1.25rem;
+    }
+    
+    .error-alert ul {
+        margin: 0;
+        padding-left: 1.5rem;
+        color: #721c24;
+    }
+    
+    .error-alert li {
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+    }
+    
+    .errorlist {
+        background: linear-gradient(135deg, #fee 0%, #fdd 100%);
+        border-left: 4px solid #dc3545;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        margin-top: 0.5rem;
+        color: #721c24;
+        font-size: 0.875rem;
+        font-weight: 500;
+        list-style: none;
+    }
+    
+    .errorlist::before {
+        content: "⚠️ ";
+        margin-right: 0.25rem;
+    }
+    
+    .btn-register {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 0.875rem 2rem;
+        font-weight: 600;
+        font-size: 1.05rem;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .btn-register:hover {
+        background: linear-gradient(135deg, #5568d3 0%, #6a3f8f 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        color: white;
+    }
+    
+    .btn-register::before {
+        content: "✨";
+        font-size: 1.25rem;
+    }
+    
+    .welcome-box {
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        border-left: 4px solid #2196f3;
+        border-radius: 12px;
+        padding: 1.25rem;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: start;
+        gap: 1rem;
+    }
+    
+    .welcome-box::before {
+        content: "👋";
+        font-size: 1.5rem;
+        flex-shrink: 0;
+        margin-top: 0.125rem;
+    }
+    
+    .welcome-box p {
+        margin: 0;
+        color: #0d47a1;
+        font-weight: 500;
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+    
+    .login-link-section {
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 2px solid #e9ecef;
+        text-align: center;
+    }
+    
+    .login-link-section p {
+        margin: 0;
+        color: #6c757d;
+        font-size: 0.95rem;
+    }
+    
+    .login-link-section a {
+        color: #667eea;
+        font-weight: 700;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+    
+    .login-link-section a:hover {
+        color: #764ba2;
+        text-decoration: underline;
+    }
+    
+    @media (max-width: 576px) {
+        .register-container {
+            padding: 1rem;
+        }
+        
+        .register-body {
+            padding: 2rem 1.5rem;
+        }
+        
+        .register-icon {
+            font-size: 3rem;
+        }
+        
+        .register-header h2 {
+            font-size: 1.5rem;
+        }
+    }
+</style>
+
+<div class="register-container">
+    <div class="col-md-7 col-lg-6">
+        <div class="card register-card">
+            <div class="register-header">
+                <div class="register-icon">🚀</div>
+                <h2>Create Your Account</h2>
+                <p>Join us and start tracking your expenses today!</p>
+            </div>
+            <div class="card-body register-body">
+                {% if errors %}
+                <div class="alert error-alert">
+                    <strong>Please fix these errors:</strong>
+                    <ul>
+                        {% for field, error_list in errors.items %}
+                            <li>{{ field|title }}: {{ error_list|first }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                <div class="welcome-box">
+                    <p><strong>Welcome!</strong> Create your free account to start managing your finances with ease.</p>
+                </div>
+
+                <form method="POST" novalidate>
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <button type="submit" class="btn btn-register">
+                        Create Account
+                    </button>
+                </form>
+                
+                <div class="login-link-section">
+                    <p>Already have an account? <a href="{% url 'login' %}">Log in here</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
